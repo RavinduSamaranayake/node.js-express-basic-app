@@ -12,6 +12,21 @@ let db = mongoose.connection;
 //initialize app
 const app = express();
 
+//check connection
+db.once('open',function(){
+    console.log('Conneted to mongodb........');
+});
+
+//Check for db errors
+db.on('error',function(err){
+    console.log(err);
+});
+
+//bring in models
+let Article = require('./models/article');
+
+
+
 //load view engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', `pug`);
@@ -20,7 +35,7 @@ app.set('view engine', `pug`);
 //Home route
 app.get('/',function(req,res){ 
 
-   let articles = [{id:1,                                //define associative array
+  /* let articles = [{id:1,                                //define associative array
                     title:'article one',
                     author:'kushan ravindu',
                     body:'this is article 1'},
@@ -36,13 +51,20 @@ app.get('/',function(req,res){
                      body:'this is article 3'}
                         
                     
-                ];
+                ];   */
 
-
-   res.render('index',{
-        //pass value to word
-         word:'Article',
-         articles: articles
+    Article.find({},function(err,arti){  //get all vlues from article table
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render('index',{
+                //pass value to word
+                 word:'Article',
+                 articles: arti
+            })
+        }
+  
    });
 }); 
 
@@ -60,3 +82,4 @@ app.get('/articles/add',function(req,res){
 app.listen(port, function(){
     console.log(`Example app listening on port ${port}!`);
 });
+
