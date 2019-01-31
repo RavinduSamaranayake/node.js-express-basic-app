@@ -1,1 +1,8 @@
-h1 Hello Node Express...........................
+extends layout
+
+block content
+        h1 #{word}
+        ul
+          
+          each article, i in articles
+                  li= article.title   
