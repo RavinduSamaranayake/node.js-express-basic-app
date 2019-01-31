@@ -1,6 +1,13 @@
 const express = require('express');
 const path = require('path');
 const port = 3000;
+const mongoose = require('mongoose');
+
+
+
+//connect to the mongodb
+mongoose.connect('mongodb://localhost/basicnodedb');
+let db = mongoose.connection;
 
 //initialize app
 const app = express();
@@ -41,7 +48,6 @@ app.get('/',function(req,res){
 
 //Add route
 app.get('/articles/add',function(req,res){ 
-    // res.send('Hello World.............')});
     res.render('add_articles',{
          //pass value to word
           word:'Add Articles'
