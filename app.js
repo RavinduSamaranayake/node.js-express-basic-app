@@ -46,7 +46,7 @@ app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname,'public')));
 
 
-//Home route
+//Home route and load the all aricles to page
 app.get('/',function(req,res){ 
 
   /* let articles = [{id:1,                                
@@ -75,7 +75,7 @@ app.get('/',function(req,res){
             res.render('index',{
                 //pass value to word
                  word:'Article',
-                 articles: arti
+                 articles: arti //set the all articles for articles
             })
         }
   
@@ -120,7 +120,7 @@ app.get('/articles/add',function(req,res){
 
 
  
- //Add Submit Post Route
+ //Add Submit Post Route  and save data in db
  app.post('/articles/add',function(req,res){ 
      
     let article = new Article();
@@ -128,7 +128,7 @@ app.get('/articles/add',function(req,res){
     article.author = req.body.author;
     article.body = req.body.body;
 
-    article.save(function(err){
+    article.save(function(err){ //save data in db
         if(err){
             console.log(err);
         }
@@ -144,8 +144,62 @@ app.get('/articles/add',function(req,res){
 
 
 
-//Start server    
+ //Edit single article 
+ app.get('/article/edit/:id',function(req,res){     //':id' mean this is the place holder this can be any thing
+     Article.findById(req.params.id, function(err,article){  //getting data from mongo db using findById method 
+                                                              //and the req.params.id mean the id is getting from user request
+        // console.log(article); 
+        // return
+        if(err){
+            console.log(err);
+        }
+
+        
+           
+         else{
+             res.render('edit_articles',{
+               //pass values
+             article: article
+             }
+         );
+            
+       }
+        
+    });
+
+ });
+
+
+
+ 
+
+ //update data in databse
+ app.post('/articles/edit/:id',function(req,res){ 
+     
+    let article = {};
+
+    article.title = req.body.title;
+    article.author = req.body.author;
+    article.body = req.body.body;
+
+    let query = {_id:req.params.id}
+
+    Article.update(query,article,function(err){ //update value
+        if(err){
+            console.log(err);
+            return;
+        }else{
+            res.redirect('/');
+        }
+    });
+
+ });
+
+
+
+
+
+//Start server   
 app.listen(port, function(){
     console.log(`Example app listening on port ${port}!`);
 });
-
