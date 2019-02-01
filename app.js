@@ -32,7 +32,9 @@ let Article = require('./models/article');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', `pug`);
 
-//boy parser middleware
+
+
+//body parser middleware
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -40,10 +42,14 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 
+//set public folder statically
+app.use(express.static(path.join(__dirname,'public')));
+
+
 //Home route
 app.get('/',function(req,res){ 
 
-  /* let articles = [{id:1,                                //define associative array
+  /* let articles = [{id:1,                                
                     title:'article one',
                     author:'kushan ravindu',
                     body:'this is article 1'},
@@ -85,6 +91,8 @@ app.get('/articles/add',function(req,res){
  });
 
 
+
+ 
  //Add Submit Post Route
  app.post('/articles/add',function(req,res){ 
      
