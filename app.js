@@ -197,6 +197,26 @@ app.get('/articles/add',function(req,res){
 
 
 
+ //Delete Article 
+
+ app.delete('/article/:id',function(req,res){ 
+     
+   
+    let query = {_id:req.params.id}
+
+    Article.remove(query,function(err){ //delete value
+        if(err){
+            console.log(err);
+            return;
+        }
+            res.send('Success');
+    });
+
+ });
+
+
+
+
 
 
 //Start server   
