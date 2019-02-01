@@ -91,6 +91,33 @@ app.get('/articles/add',function(req,res){
  });
 
 
+ //get single article and view
+ app.get('/article/:id',function(req,res){     //':id' mean this is the place holder this can be any thing
+     Article.findById(req.params.id, function(err,article){  //getting data from mongo db using findById method 
+                                                              //and the req.params.id mean the id is getting from user request
+        // console.log(article); 
+        // return
+        if(err){
+            console.log(err);
+        }
+
+        
+           
+         else{
+             res.render('single_article',{
+               //pass values
+             article: article
+             }
+         );
+            
+       }
+        
+    });
+
+ });
+
+
+
 
  
  //Add Submit Post Route
