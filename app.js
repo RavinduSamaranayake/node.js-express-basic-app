@@ -129,8 +129,9 @@ app.get('/',function(req,res){
 
 //Route Files
 let articles = require('./routes/articles');
+let users = require('./routes/users');
 app.use('/articles',articles); //in here when we use this command, we can use articles.js file instead of '/articles' path 
-
+app.use('/users',users);
 
 //Start server   
 app.listen(port, function(){
