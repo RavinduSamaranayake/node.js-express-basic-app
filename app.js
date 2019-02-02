@@ -14,7 +14,7 @@ const session = require('express-session');
 
 
 //connect to the mongodb
-mongoose.connect('mongodb://localhost/basicnodedb' ,{ useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/basicnodedb' );
 let db = mongoose.connection;
 
 //initialize app
@@ -167,25 +167,35 @@ app.get('/articles/add',function(req,res){
  
  //Add Submit Post Route  and save data in db
  app.post('/articles/add',function(req,res){ 
-     
+    req.checkBody('title','Title is required').notEmpty();
+    req.checkBody('author','Author is required').notEmpty();
+    req.checkBody('body','Body is required').notEmpty();
+
+  // Get Errors
+  let errors = req.validationErrors();
+
+  if(errors){
+    res.render('add_articles', {
+      title:'Add Article',
+      errors:errors
+    });
+  } else {
     let article = new Article();
     article.title = req.body.title;
     article.author = req.body.author;
     article.body = req.body.body;
 
-    article.save(function(err){ //save data in db
-        if(err){
-            console.log(err);
-        }
-        else{
-            req.flash('success', 'Article Added');
-            res.redirect('/')
-           
-        }
-    }
-
-    );
-
+    article.save(function(err){
+      if(err){
+        console.log(err);
+        return;
+      } else {
+        req.flash('success','Article Added');
+        res.redirect('/');
+      }
+    });
+  } 
+    
  });
 
 
@@ -221,6 +231,8 @@ app.get('/articles/add',function(req,res){
 
  //update data in databse
  app.post('/articles/edit/:id',function(req,res){ 
+    
+    
      
     let article = {};
 
