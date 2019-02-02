@@ -1,5 +1,7 @@
-alert(0)
+//alert('Hi');
 $(document).ready(function(){
+   // alert('Hello');
+    //alert(0);
     $('.delete-article').on('click',function(e){
         alert(1)
         $target = $(e.target);
