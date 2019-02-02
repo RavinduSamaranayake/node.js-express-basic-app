@@ -24,23 +24,17 @@ html
                span.sr-only (current)
            li.nav-item
              a.nav-link(href='/articles/add') Add Article
+
+         ul.nav.navbar-nav.navbar-right
            li.nav-item
-             a.nav-link.disabled(href='#') Disabled
-           li.nav-item.dropdown
-             a#dropdown01.nav-link.dropdown-toggle(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Dropdown
-             .dropdown-menu(aria-labelledby='dropdown01')
-               a.dropdown-item(href='#') Action
-               a.dropdown-item(href='#') Another action
-               a.dropdown-item(href='#') Something else here
-         form.form-inline.my-2.my-lg-0
-           input.form-control.mr-sm-2(type='text', placeholder='Search', aria-label='Search')
-           button.btn.btn-secondary.my-2.my-sm-0(type='submit') Search
+             a.nav-link(href='/users/register') Register
+           li.nav-item
+             a.nav-link(href='/users/login') Login
+            
+            
+         
 
       .container
-           !=messages('message',locals)
-           if errors
-              each error, i in errors
-                  div(class="alert alert-danger") #{error.msg}
            block content
            br
            hr
