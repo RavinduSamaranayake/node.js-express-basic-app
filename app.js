@@ -6,7 +6,8 @@ const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session');
-
+const config = require('./config/database');
+const passport = require('passport');
 
 
 
@@ -14,7 +15,7 @@ const session = require('express-session');
 
 
 //connect to the mongodb
-mongoose.connect('mongodb://localhost/basicnodedb' );
+mongoose.connect(config.database);
 let db = mongoose.connection;
 
 //initialize app
@@ -60,7 +61,10 @@ app.use(session({
 
 
 
-  //Express Message middleware
+
+
+
+//Express Message middleware
 app.use(require('connect-flash')());
 app.use(function (req, res, next) {
   res.locals.messages = require('express-messages')(req, res);
@@ -85,6 +89,20 @@ app.use(expressValidator({
       };
     }
   }));
+
+
+// Passport Config
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+//set the global variable user to all routes
+app.get('*', function(req, res, next){ 
+    res.locals.user = req.user || null;
+    next();
+});
 
 
 //set public folder statically
