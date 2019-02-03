@@ -4,6 +4,9 @@ const router = express.Router();
 //bring in Article model
 let Article = require('../models/article'); //we use .. cause of model is out of the route folder
 
+//bring in User model
+let User = require('../models/user');
+
 
 //Add route
 router.get('/add',function(req,res){ 
@@ -19,7 +22,7 @@ router.get('/add',function(req,res){
  //Add Submit Post Route  and save data in db
  router.post('/add',function(req,res){ 
     req.checkBody('title','Title is required').notEmpty();
-    req.checkBody('author','Author is required').notEmpty();
+    //req.checkBody('author','Author is required').notEmpty();
     req.checkBody('body','Body is required').notEmpty();
 
   // Get Errors
@@ -33,7 +36,7 @@ router.get('/add',function(req,res){
   } else {
     let article = new Article();
     article.title = req.body.title;
-    article.author = req.body.author;
+    article.author = req.user._id; //to set the user id for author
     article.body = req.body.body;
 
     article.save(function(err){
@@ -128,11 +131,11 @@ router.get('/add',function(req,res){
  //get single article and view
  router.get('/:id',function(req,res){     //':id' mean this is the place holder this can be any thing
      Article.findById(req.params.id, function(err,article){  //getting data from mongo db using findById method 
-                                                              //and the req.params.id mean the id is getting from user request
+        User.findById(article.author, function(err,user){     //the user is a article author                                                 //and the req.params.id mean the id is getting from user request
         // console.log(article); 
         // return
         if(err){
-            console.log(err);
+            console.log(err);                  //in this function  ......................
         }
 
         
@@ -140,15 +143,17 @@ router.get('/add',function(req,res){
          else{
              res.render('single_article',{
                //pass values
-             article: article
+             article: article,
+             author: user.name
+
              }
          );
             
        }
         
     });
-
- });
+  });
+});
 
 
 
