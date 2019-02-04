@@ -9,7 +9,7 @@ let User = require('../models/user');
 
 
 //Add route
-router.get('/add',function(req,res){ 
+router.get('/add',ensureAuthenticated,function(req,res){ 
     res.render('add_articles',{
          //pass value to word
           word:'Add Articles'
@@ -134,13 +134,7 @@ router.get('/add',function(req,res){
         User.findById(article.author, function(err,user){     //the user is a article author                                                 //and the req.params.id mean the id is getting from user request
         // console.log(article); 
         // return
-        if(err){
-            console.log(err);                  //in this function  ......................
-        }
-
-        
-           
-         else{
+       
              res.render('single_article',{
                //pass values
              article: article,
@@ -151,9 +145,20 @@ router.get('/add',function(req,res){
             
        }
         
-    });
+    );
   });
 });
+
+
+// Access Control
+function ensureAuthenticated(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
+  } else {
+    req.flash('danger', 'Please login');
+    res.redirect('/users/login');
+  }
+}
 
 
 
