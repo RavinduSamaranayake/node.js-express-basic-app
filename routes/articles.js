@@ -55,18 +55,17 @@ router.get('/add',ensureAuthenticated,function(req,res){
 
 
  //Edit single article 
- router.get('/edit/:id',function(req,res){     //':id' mean this is the place holder this can be any thing
+ router.get('/edit/:id',ensureAuthenticated,function(req,res){     //':id' mean this is the place holder this can be any thing
      Article.findById(req.params.id, function(err,article){  //getting data from mongo db using findById method 
-                                                              //and the req.params.id mean the id is getting from user request
-        // console.log(article); 
-        // return
-        if(err){
-            console.log(err);
-        }
-
-        
            
-         else{
+      
+          if(article.author != req.user._id){
+           req.flash('danger', 'Not Authorized');
+           res.redirect('/');
+           console.log("......................can't login..................................");
+         }                                                 //and the req.params.id mean the id is getting from user request
+       
+        
              res.render('edit_articles',{
                //pass values
              article: article
@@ -75,7 +74,7 @@ router.get('/add',ensureAuthenticated,function(req,res){
             
        }
         
-    });
+    );
 
  });
 
